@@ -2,46 +2,43 @@ package cz.muni.fi.pv260.productfilter;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class AtLeastNOfFilterTest {
 
     @Test
     public void testMoreThanOneFilterDefined() {
-        AtLeastNOfFilter filter = new AtLeastNOfFilter(2, new AlwaysTrueFilterMock(), new AlwaysTrueFilterMock());
+        AtLeastNOfFilter filter = new AtLeastNOfFilter(1, new AlwaysTrueFilterMock(), new AlwaysFalseFilterMock());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNIsZero() {
+    public void testNCantBeZero() {
         AtLeastNOfFilter filter = new AtLeastNOfFilter(0, new AlwaysTrueFilterMock());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNIsLessZero() {
+    public void testNCantBeLessThanZero() {
         AtLeastNOfFilter filter = new AtLeastNOfFilter(-1, new AlwaysTrueFilterMock());
     }
 
     @Test(expected = FilterNeverSucceeds.class)
-    public void testNHigherThanNumberOfFilters() {
+    public void testNCantBeHigherThanNumberOfFilters() {
         AtLeastNOfFilter filter = new AtLeastNOfFilter(2, new AlwaysTrueFilterMock());
     }
 
     @Test
-    public void testExactly1FilterPassesFromTwo() {
+    public void testExactlyOneFilterPassesFromTwo() {
         AtLeastNOfFilter filter = new AtLeastNOfFilter(1, new AlwaysFalseFilterMock(), new AlwaysTrueFilterMock());
         assertTrue(filter.passes(new Object()));
     }
 
     @Test
-    public void testNoFilterPasses() {
+    public void testNoFilterPassesFromTwo() {
         AtLeastNOfFilter filter = new AtLeastNOfFilter(1, new AlwaysFalseFilterMock(), new AlwaysFalseFilterMock());
         assertFalse(filter.passes(new Object()));
     }
 
     @Test
-    public void testExactly2FiltersPass() {
+    public void testSameAmountOfFiltersPassAsN() {
         AtLeastNOfFilter filter = new AtLeastNOfFilter(2, new AlwaysTrueFilterMock(), new AlwaysTrueFilterMock());
         assertTrue(filter.passes(new Object()));
     }
